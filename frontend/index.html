@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>BFHL App</title>
+  <title>API</title>
   <style>
     body { font-family: Arial; padding: 20px; }
     textarea { width: 100%; height: 200px; }
@@ -48,7 +48,7 @@
         filters: selectedFilters
       };
 
-      const res = await fetch('http://localhost:5000/bfhl/process', {
+      const res = await fetch('https://bfhl-api.onrender.com/bfhl/process', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(payload)
