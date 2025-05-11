@@ -1,0 +1,62 @@
+<!-- === index.html (Frontend) === -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BFHL App</title>
+  <style>
+    body { font-family: Arial; padding: 20px; }
+    textarea { width: 100%; height: 200px; }
+    .filter-section { margin-top: 20px; }
+    #result { white-space: pre-wrap; margin-top: 20px; font-family: monospace; }
+  </style>
+</head>
+<body>
+  <h1>BFHL App</h1>
+  <textarea id="jsonInput" placeholder="Enter JSON input"></textarea>
+  <br />
+  <button onclick="submitData()">Submit</button>
+
+  <div class="filter-section">
+    <h3>Filter Options</h3>
+    <label><input type="checkbox" value="numbers" class="filter" />numbers</label>
+    <label><input type="checkbox" value="alphabets" class="filter" />alphabets</label>
+    <label><input type="checkbox" value="highest_lowercase_alphabet" class="filter" />highest_lowercase_alphabet</label>
+  </div>
+
+  <h3>Output</h3>
+
+  <div id="result"></div>
+
+  <script>
+    async function submitData() {
+      const inputText = document.getElementById('jsonInput').value;
+      let inputArray;
+      try {
+        inputArray = JSON.parse(inputText);
+        if (!Array.isArray(inputArray)) throw new Error();
+      } catch {
+        alert('Please enter a valid JSON array');
+        return;
+      }
+
+      const selectedFilters = Array.from(document.querySelectorAll('.filter:checked')).map(cb => cb.value);
+
+      const payload = {
+        input: inputArray,
+        filters: selectedFilters
+      };
+
+      const res = await fetch('http://localhost:5000/bfhl/process', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+
+      const data = await res.json();
+      document.getElementById('result').textContent = JSON.stringify(data, null, 2);
+    }
+  </script>
+</body>
+</html>
